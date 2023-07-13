@@ -7,6 +7,10 @@ use GuzzleHttp\Exception\GuzzleException;
 
 class ScheduleApiService
 {
+    protected const BASE_URI = 'https://webcab.stu.cn.ua';
+    protected const SCHEDULE_PATH = '/WebDk/api/schedule/get';
+    protected const TOKEN_PATH = '/WebDk/token';
+
     protected Client $client;
     private string $accessToken;
 
@@ -16,7 +20,7 @@ class ScheduleApiService
     public function __construct()
     {
         $this->client = new Client([
-            'base_uri' => 'https://webcab.stu.cn.ua',
+            'base_uri' => self::BASE_URI,
             'verify' => false,
 
         ]);
@@ -25,10 +29,9 @@ class ScheduleApiService
 
     /**
      * @throws GuzzleException
+     * @return array
      */
-
-
-    public function fetchData()
+    public function fetchData($date_from,$date_to): array
     {
         $headers = [
             'headers' => [
@@ -36,12 +39,12 @@ class ScheduleApiService
                 'Content-Type' => 'application/json'
             ],
             'json' => [
-                'dateFrom' => '2023-04-09T00:00:00',
-                'dateTo' => '2023-04-11T00:00:00'
+                'dateFrom' => "$date_from",
+                'dateTo' => "$date_to"
             ]
         ];
 
-        $response = $this->client->post('/WebDk/api/schedule/get', $headers);
+        $response = $this->client->request('POST', self::SCHEDULE_PATH, $headers);
 
         return json_decode($response->getBody(), true);
     }
@@ -49,12 +52,12 @@ class ScheduleApiService
     /**
      * @throws GuzzleException
      */
-    public function authenticate()
+    public function authenticate(): void
     {
         $username = config('app.api_username');
         $password = config('app.api_password');
 
-        $response = $this->client->post('/WebDk/token', [
+        $response = $this->client->request('POST', self::TOKEN_PATH, [
             'form_params' => [
                 'grant_type' => 'password',
                 'username' => $username,
