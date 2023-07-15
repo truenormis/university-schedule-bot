@@ -47,6 +47,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Schedule whereStudyTypeName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Schedule whereSubgroupName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Schedule whereUpdatedAt($value)
+ * @method static \Database\Factories\ScheduleFactory factory($count = null, $state = [])
  * @mixin \Eloquent
  */
 class Schedule extends Model

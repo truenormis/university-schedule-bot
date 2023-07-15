@@ -72,4 +72,32 @@ class ScheduleGettingServiceTest extends TestCase
         }
 
     }
+
+    public function testGetNextLesson(){
+        $knownDate = Carbon::createFromTime(8,22);
+        Carbon::setTestNow($knownDate);
+
+        Schedule::factory()->create([
+            'scheduleDate' => Carbon::today()->format('Y-m-d'),
+            'studyTimeBegin' => '8:00',
+            'studyTimeEnd' => '9:20',
+        ]);
+        $target = Schedule::factory()->create([
+            'scheduleDate' => Carbon::today()->format('Y-m-d'),
+            'studyTimeBegin' => '9:40',
+            'studyTimeEnd' => '10:20',
+        ]);
+        Schedule::factory()->create([
+            'scheduleDate' => Carbon::today()->format('Y-m-d'),
+            'studyTimeBegin' => '10:40',
+            'studyTimeEnd' => '11:20',
+        ]);
+
+
+        $service = new ScheduleGettingService();
+        $results = $service->get_next_lesson();
+
+        $this->assertInstanceOf(Schedule::class,$results);
+        $this->assertEquals($results->id,$target->id);
+    }
 }
