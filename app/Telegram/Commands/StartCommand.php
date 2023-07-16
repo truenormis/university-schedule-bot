@@ -3,22 +3,23 @@
 namespace App\Telegram\Commands;
 
 use App\Models\State;
-use Telegram\Bot\Actions;
-use Telegram\Bot\Commands\Command;
-use Telegram\Bot\Keyboard\Keyboard;
+use SergiX44\Nutgram\Handlers\Type\Command;
+use SergiX44\Nutgram\Nutgram;
+
 
 class StartCommand extends Command
 {
-    protected string $name = 'start';
-    protected string $description = 'Start Command to get you started';
+    protected string $command = 'start';
 
-    public function handle(): void
+    protected ?string $description = 'A lovely description.';
+
+    public function handle(Nutgram $bot): void
     {
-        $this->replyWithChatAction(['action' => Actions::CHOOSE_STICKER]);
-        $this->replyWithSticker(['sticker' => 'CAACAgIAAxkBAAICoWSzFvD2j_QQWKRDnPKwBCqSalIuAAI9AAOymJoOgqzpk7IcUtkvBA']);
-        $this->replyWithChatAction(['action' => Actions::TYPING]);
+//        $this->replyWithChatAction(['action' => Actions::CHOOSE_STICKER]);
+//        $this->replyWithSticker(['sticker' => 'CAACAgIAAxkBAAICoWSzFvD2j_QQWKRDnPKwBCqSalIuAAI9AAOymJoOgqzpk7IcUtkvBA']);
+//        $this->replyWithChatAction(['action' => Actions::TYPING]);
 
-        $this->sendWelcomeMessage();
+        $this->sendWelcomeMessage($bot);
         $this->UpdateState();
 
 
@@ -27,18 +28,18 @@ class StartCommand extends Command
     /**
      * @return void
      */
-    public function sendWelcomeMessage(): void
+    public function sendWelcomeMessage(Nutgram $bot): void
     {
-        $keyboard = [
-            ['📅 Узнать рассписание'],
-            ['❓ Помощь по боту'],
-            ['⚙️ Настройки']
-        ];
-        $reply_markup = Keyboard::make([
-            'keyboard' => $keyboard,
-            'resize_keyboard' => false,
-            'one_time_keyboard' => true
-        ]);
+//        $keyboard = [
+//            ['📅 Узнать рассписание'],
+//            ['❓ Помощь по боту'],
+//            ['⚙️ Настройки']
+//        ];
+//        $reply_markup = Keyboard::make([
+//            'keyboard' => $keyboard,
+//            'resize_keyboard' => false,
+//            'one_time_keyboard' => true
+//        ]);
 
 
         $HelloMes = '👋 Привет! Я Бот-расписание, здесь чтобы помочь тебе организовать свою жизнь!
@@ -52,11 +53,9 @@ class StartCommand extends Command
     - Напоминать тебе про следующюю пару благодаря рассылке
 
 ⌨️ Просто воспользуйся клавиатурой ниже, чтобы выбрать действие:';
-        $this->replyWithMessage([
-            'text' => $HelloMes,
-            'reply_markup' => $reply_markup
-        ]);
+        $bot->sendMessage('dqweqweq');
     }
+
 
     /**
      * @return void

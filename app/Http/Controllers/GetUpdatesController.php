@@ -2,17 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\TelegramUpdateJob;
-use Telegram\Bot\Exceptions\TelegramSDKException;
-use Telegram\Bot\Laravel\Facades\Telegram;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use SergiX44\Nutgram\Nutgram;
+use SergiX44\Nutgram\Telegram\Types\Common\Update;
+
 
 class GetUpdatesController extends Controller
 {
+
     /**
-     * @throws TelegramSDKException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function __invoke()
+    public function __invoke(Nutgram $bot)
     {
-        TelegramUpdateJob::dispatch();
+
+        $updates = $bot->getUpdates();
+        dd($updates);
+
+        /** @var Update $update */
+        foreach ($updates as $update) {
+
+
+        }
     }
 }

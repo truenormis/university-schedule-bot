@@ -9,8 +9,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Telegram\Bot\Laravel\Facades\Telegram;
-use Telegram\Bot\Objects\Update;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use SergiX44\Nutgram\Nutgram;
+use SergiX44\Nutgram\Telegram\Types\Common\Update;
 
 class TelegramUpdateJob implements ShouldQueue
 {
@@ -21,9 +23,14 @@ class TelegramUpdateJob implements ShouldQueue
      */
 
     protected int $offset;
-    protected $state;
+    protected State $state;
+    protected Nutgram $bot;
     private HandleMessageService $handleMessageService;
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function __construct()
     {
         $this->offset = 0;
@@ -35,13 +42,12 @@ class TelegramUpdateJob implements ShouldQueue
      */
     public function handle(): void
     {
-        while (true){
             // Get the latest updates from Telegram with the offset
             $updates = $this->get_updates();
 
             // Loop through the updates
             $this->loopThroughTheUpdates($updates);
-        }
+
 
 
     }
@@ -49,9 +55,12 @@ class TelegramUpdateJob implements ShouldQueue
     /**
      * @return array|Update
      */
-    private function get_updates(): Update|array
+    private function get_updates(): array|Update
     {
-        return Telegram::commandsHandler(false);
+
+
+        // Retrieve te list of pending updates...
+        return $this->bot->getUpdates();
     }
 
     /**
@@ -60,14 +69,22 @@ class TelegramUpdateJob implements ShouldQueue
      */
     public function loopThroughTheUpdates(array|Update $updates): void
     {
-        foreach ($updates as $update) {
-            if ($update->isMessageType) {
-                $this->loadState($update);
 
-                $this->handleMessageService->handleMessage($update);
-                $this->offset = $update->getUpdateId() + 1;
-            }
+
+
+        foreach ($updates as $update) {
+            $this->bot->onMessage(function (Nutgram $bot) {
+                $bot->sendMessage('You sent a message!');
+            });
         }
+//        foreach ($updates as $update) {
+//            if ($update->isMessageType) {
+//                $this->loadState($update);
+//
+//                $this->handleMessageService->handleMessage($update);
+//                $this->offset = $update->getUpdateId() + 1;
+//            }
+//        }
     }
 
 
