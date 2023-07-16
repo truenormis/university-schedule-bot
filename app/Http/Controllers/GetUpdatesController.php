@@ -14,7 +14,5 @@ class GetUpdatesController extends Controller
     public function __invoke()
     {
         TelegramUpdateJob::dispatch();
-        return response()->json(['message' => 'Job dispatched.']);
-
     }
 }
