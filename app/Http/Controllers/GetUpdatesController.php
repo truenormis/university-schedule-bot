@@ -2,29 +2,26 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Telegram\Commands\StartCommand;
+use Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use SergiX44\Nutgram\Nutgram;
-use SergiX44\Nutgram\Telegram\Types\Common\Update;
 
 
 class GetUpdatesController extends Controller
 {
 
+
     /**
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(Nutgram $bot)
+    public function __invoke(Nutgram $bot): void
     {
 
-        $updates = $bot->getUpdates();
-        dd($updates);
-
-        /** @var Update $update */
-        foreach ($updates as $update) {
-
-
-        }
+        $bot->onCommand('start', [StartCommand::class, 'handle']);
+        $bot->run();
     }
 }

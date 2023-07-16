@@ -5,6 +5,8 @@ namespace App\Telegram\Commands;
 use App\Models\State;
 use SergiX44\Nutgram\Handlers\Type\Command;
 use SergiX44\Nutgram\Nutgram;
+use SergiX44\Nutgram\Telegram\Types\Keyboard\KeyboardButton;
+use SergiX44\Nutgram\Telegram\Types\Keyboard\ReplyKeyboardMarkup;
 
 
 class StartCommand extends Command
@@ -18,9 +20,12 @@ class StartCommand extends Command
 //        $this->replyWithChatAction(['action' => Actions::CHOOSE_STICKER]);
 //        $this->replyWithSticker(['sticker' => 'CAACAgIAAxkBAAICoWSzFvD2j_QQWKRDnPKwBCqSalIuAAI9AAOymJoOgqzpk7IcUtkvBA']);
 //        $this->replyWithChatAction(['action' => Actions::TYPING]);
-
+        $bot->sendSticker('CAACAgIAAxkBAAICoWSzFvD2j_QQWKRDnPKwBCqSalIuAAI9AAOymJoOgqzpk7IcUtkvBA');
         $this->sendWelcomeMessage($bot);
-        $this->UpdateState();
+        $this->UpdateState($bot);
+
+
+
 
 
     }
@@ -30,16 +35,10 @@ class StartCommand extends Command
      */
     public function sendWelcomeMessage(Nutgram $bot): void
     {
-//        $keyboard = [
-//            ['📅 Узнать рассписание'],
-//            ['❓ Помощь по боту'],
-//            ['⚙️ Настройки']
-//        ];
-//        $reply_markup = Keyboard::make([
-//            'keyboard' => $keyboard,
-//            'resize_keyboard' => false,
-//            'one_time_keyboard' => true
-//        ]);
+       $reply_markup = ReplyKeyboardMarkup::make()
+           ->addRow(KeyboardButton::make('📅 Узнать рассписание'))
+           ->addRow(KeyboardButton::make('❓ Помощь по боту'))
+           ->addRow(KeyboardButton::make('⚙️ Настройки'));
 
 
         $HelloMes = '👋 Привет! Я Бот-расписание, здесь чтобы помочь тебе организовать свою жизнь!
@@ -53,17 +52,18 @@ class StartCommand extends Command
     - Напоминать тебе про следующюю пару благодаря рассылке
 
 ⌨️ Просто воспользуйся клавиатурой ниже, чтобы выбрать действие:';
-        $bot->sendMessage('dqweqweq');
+        $bot->sendMessage(
+            text: $HelloMes,
+            reply_markup: $reply_markup
+        );
+        $bot->sendMessage();
     }
 
 
-    /**
-     * @return void
-     */
-    public function UpdateState(): void
+    public function UpdateState(Nutgram $bot): void
     {
         State::updateOrCreate(
-            ['chat_id' => $this->getUpdate()->getChat()->getId()],
+            ['chat_id' => $bot->chatId()],
             ['state' => 'menu.main']
         );
     }
