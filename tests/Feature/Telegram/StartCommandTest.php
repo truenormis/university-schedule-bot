@@ -8,6 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Mockery;
 use SergiX44\Nutgram\Nutgram;
+use SergiX44\Nutgram\Telegram\Types\Message\Message;
 use Tests\TestCase;
 
 class StartCommandTest extends TestCase
@@ -22,6 +23,8 @@ class StartCommandTest extends TestCase
         $mock = Mockery::mock(Nutgram::class);
         $mock->shouldReceive('chatId')
             ->andReturn($chatId)->once();
+        $mock->shouldReceive('sendMessage')
+            ->andReturn(new Message());
 
 
         $command = New StartCommand();

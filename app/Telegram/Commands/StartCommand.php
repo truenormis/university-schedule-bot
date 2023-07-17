@@ -3,6 +3,7 @@
 namespace App\Telegram\Commands;
 
 use App\Models\State;
+use Exception;
 use SergiX44\Nutgram\Handlers\Type\Command;
 use SergiX44\Nutgram\Nutgram;
 use SergiX44\Nutgram\Telegram\Types\Keyboard\KeyboardButton;
@@ -25,9 +26,6 @@ class StartCommand extends Command
         $this->UpdateState($bot);
 
 
-
-
-
     }
 
     /**
@@ -35,11 +33,10 @@ class StartCommand extends Command
      */
     public function sendWelcomeMessage(Nutgram $bot): void
     {
-       $reply_markup = ReplyKeyboardMarkup::make()
-           ->addRow(KeyboardButton::make('📅 Узнать рассписание'))
-           ->addRow(KeyboardButton::make('❓ Помощь по боту'))
-           ->addRow(KeyboardButton::make('⚙️ Настройки'));
-
+        $reply_markup = ReplyKeyboardMarkup::make()
+            ->addRow(KeyboardButton::make('📅 Узнать рассписание'))
+            ->addRow(KeyboardButton::make('❓ Помощь по боту'))
+            ->addRow(KeyboardButton::make('⚙️ Настройки'));
 
         $HelloMes = '👋 Привет! Я Бот-расписание, здесь чтобы помочь тебе организовать свою жизнь!
 
@@ -56,15 +53,27 @@ class StartCommand extends Command
             text: $HelloMes,
             reply_markup: $reply_markup
         );
-        $bot->sendMessage();
+
     }
 
 
-    public function UpdateState(Nutgram $bot): void
+    private function UpdateState(Nutgram $bot): void
     {
-        State::updateOrCreate(
-            ['chat_id' => $bot->chatId()],
-            ['state' => 'menu.main']
-        );
+        try {
+            $state = State::updateOrCreate(
+                ['chat_id' => $bot->chatId()],
+                ['state' => 'main.menu']
+            );
+
+            if ($state == null) {
+                $errorMessage = "Error updating state.";
+                $bot->sendMessage($errorMessage);
+            }
+        } catch (Exception $e) {
+            $errorMessage = "An error occurred: " . $e->getMessage();
+            $bot->sendMessage($errorMessage);
+        }
     }
+
+
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Telegram\Commands\StartCommand;
+use App\Telegram\Services\StateService;
 use Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -22,6 +23,7 @@ class GetUpdatesController extends Controller
     {
 
         $bot->onCommand('start', [StartCommand::class, 'handle']);
+        $bot->onMessage(StateService::class);
         $bot->run();
     }
 }
