@@ -16,3 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/lessons',\App\Http\Controllers\ViewController::class)->name('lessons');
+Route::get('/' , function(){
+	return 11;
+
+});

@@ -47,6 +47,10 @@ class ScheduleCommand extends Command
         try {
             $date_from = Carbon::today()->format('Y-m-d');
             $date_to = Carbon::today()->addDays(30)->format('Y-m-d');
+
+//            $date_from = Carbon::create(2023,3,1)->format('Y-m-d');
+//            $date_to = Carbon::create(2023,3,30)->format('Y-m-d');
+
             $data = $this->apiService->fetchData($date_from, $date_to);
             $this->add_to_db($data);
 
