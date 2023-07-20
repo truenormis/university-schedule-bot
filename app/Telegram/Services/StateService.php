@@ -6,6 +6,7 @@ use App\Models\State;
 use App\Telegram\Menus\HelpMenu;
 use App\Telegram\Menus\LessonMenu;
 use App\Telegram\Menus\MainMenu;
+use App\Telegram\Menus\Schedule\TodaySchedule;
 use App\Telegram\Menus\SettingsMenu;
 use Exception;
 use SergiX44\Nutgram\Nutgram;
@@ -26,6 +27,8 @@ class StateService
             'help.menu' => HelpMenu::class,
             'lesson.menu' => LessonMenu::class,
             'settings.menu' => SettingsMenu::class,
+
+            'lesson.today' => TodaySchedule::class
             // Добавляем другие меню по необходимости
         ];
 

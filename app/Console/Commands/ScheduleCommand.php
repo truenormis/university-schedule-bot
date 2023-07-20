@@ -16,8 +16,9 @@ class ScheduleCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'schedule:update';
-    protected $description = 'Command description';
+    protected $signature = 'schedule:update {test_date : Test date in YYYY-MM-DD format}';
+
+    protected $description = 'Updates the model schedule from an external API.';
 
     /**
      * The schedule API service instance.
@@ -46,8 +47,15 @@ class ScheduleCommand extends Command
     public function handle(): void
     {
         try {
-            $date_from = Carbon::today()->format('Y-m-d');
-            $date_to = Carbon::today()->addDays(30)->format('Y-m-d');
+            $testDate = $this->argument('test_date');
+
+            if($testDate && Carbon::parse($testDate)->isValid()) {
+                $date_from = $testDate;
+                $date_to = Carbon::parse($testDate)->addDays(30)->format('Y-m-d');
+            } else {
+                $date_from = Carbon::today()->format('Y-m-d');
+                $date_to = Carbon::today()->addDays(30)->format('Y-m-d');
+            }
 
 //            $date_from = Carbon::create(2023,3,1)->format('Y-m-d');
 //            $date_to = Carbon::create(2023,3,30)->format('Y-m-d');

@@ -8,7 +8,7 @@ use App\Telegram\Menus\Menu;
 use App\Telegram\Services\ScheduleMessage;
 use SergiX44\Nutgram\Telegram\Properties\ParseMode;
 
-class TodaySchedule extends Menu
+class TomorrowSchedule extends Menu
 {
     protected string $name = 'Today';
     protected string $state = 'lesson.today';
@@ -17,13 +17,12 @@ class TodaySchedule extends Menu
     public function show(): void
     {
         new LessonMenu($this->bot);
-
     }
 
 
     public function transfer(): void
     {
-        $lessons =  Schedule::where('scheduleDate', '2023-03-09')
+        $lessons =  Schedule::where('scheduleDate', '2023-03-10')
             ->orderBy('studyTimeBegin')
             ->get();
         $sm = new ScheduleMessage();

@@ -5,16 +5,25 @@ namespace App\Http\Controllers;
 use App\Models\Schedule;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Nutgram\Laravel\Facades\Telegram;
+use SergiX44\Nutgram\Telegram\Properties\ParseMode;
 
 class ViewController extends Controller
 {
-    public function __invoke(): \Illuminate\Contracts\View\View|\Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\Foundation\Application
+    public function __invoke()
     {
-        $lessons = Schedule::where('scheduleDate', Carbon::today())
+        $lessons = Schedule::where('scheduleDate', '2023-03-09')
             ->orderBy('studyTimeBegin')
             ->get();
+        $data = [
+            'lessons' => $lessons
+        ];
+        Telegram::sendMessage(
+            text: (string)view('lessons')->with('lessons',$lessons),
+            chat_id: env('LOG_CHAT_ID'),
+            parse_mode: ParseMode::HTML
+        );
 
-
-        return view('lessons')->with('lessons', $lessons);
+        return 111;
     }
 }

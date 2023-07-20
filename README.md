@@ -26,7 +26,7 @@ API_PASSWORD=examplepass
 ```
 php artisan schedule:update 
 ```
-
+()
 
 
 ## License
