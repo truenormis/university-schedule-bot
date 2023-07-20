@@ -41,7 +41,7 @@ class Handler extends ExceptionHandler
             $message = $e->getMessage();
             $token = env('TELEGRAM_TOKEN');
             \Http::post("https://api.telegram.org/bot$token/sendMessage",[
-                'chat_id' => 1983524521,
+                'chat_id' => env('LOG_CHAT_ID'),
                 'text' => $message,
                 'parse_mode' => 'html'
             ]);

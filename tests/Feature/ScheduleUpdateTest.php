@@ -33,26 +33,25 @@ class ScheduleUpdateTest extends TestCase
 
     }
 
-    public function test_update_schedule(): void
-    {
-
-        $test_time = Carbon::create(2023,3,1);
-
+    public function test_update_schedule(): void {
+        Schedule::truncate();
+        $test_time = Carbon::createFromFormat('Y-m-d','2023-02-28');
         Carbon::setTestNow($test_time);
 
         Artisan::call('schedule:update');
-
-        $today_count = Schedule::distinct()->count('scheduleDate');
-        // You can also assert the output of the command
-
-
-        $test_time = Carbon::create(2023,3,2);
-
+        $this->assertEquals("Schedule from ".$test_time->format('Y-m-d')." to ".$test_time->copy()->addDays(30)->format('Y-m-d')." updated successfully.\n", Artisan::output());
+        $count1 = Schedule::distinct()->count('scheduleDate');
+        $test_time = Carbon::createFromFormat('Y-m-d','2023-03-01');
         Carbon::setTestNow($test_time);
-        Artisan::call('schedule:update');
-        $tomorrow_count = Schedule::distinct()->count('scheduleDate');
 
-        $this->assertEquals($today_count+1,$tomorrow_count);
+        Artisan::call('schedule:update');
+        $this->assertEquals("Schedule from ".$test_time->format('Y-m-d')." to ".$test_time->copy()->addDays(30)->format('Y-m-d')." updated successfully.\n", Artisan::output());
+
+        $count2 = Schedule::distinct()->count('scheduleDate');
+
+        $this->assertEquals($count2,$count1+1);
+
+
     }
 
 

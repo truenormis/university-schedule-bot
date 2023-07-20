@@ -7,6 +7,7 @@ use App\Services\ScheduleApiService;
 use Carbon\Carbon;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Command;
+use Nutgram\Laravel\Facades\Telegram;
 
 class ScheduleCommand extends Command
 {
@@ -53,8 +54,14 @@ class ScheduleCommand extends Command
 
             $data = $this->apiService->fetchData($date_from, $date_to);
             $this->add_to_db($data);
+            $info_mes = "Schedule from $date_from to $date_to updated successfully.";
+            $this->info($info_mes);
+            Telegram::sendMessage(
+                text: $info_mes,
+                chat_id: env('LOG_CHAT_ID')
+            );
 
-            $this->info("Schedule from $date_from to $date_to updated successfully.");
+
         } catch (GuzzleException $e) {
             // Handle the exception
             $this->error('Failed to update schedule: ' . $e->getMessage());
@@ -71,23 +78,25 @@ class ScheduleCommand extends Command
     public function add_to_db(array $data): void
     {
         foreach ($data as $lesson) {
-            Schedule::firstOrCreate([
-                'disciplineName' => $lesson['disciplineName'],
-                'studyTimeName' => $lesson['studyTimeName'],
-                'studyTimeBegin' => Carbon::parse($lesson['studyTimeBegin'])->format('H:i'),
-                'studyTimeEnd' => Carbon::parse($lesson['studyTimeEnd'])->format('H:i'),
-                'scheduleDate' => Carbon::parse($lesson['scheduleDate'])->format('Y-m-d'),
-                'cabinetNumber' => $lesson['cabinetNumber'],
-                'positionName' => $lesson['positionName'],
-                'positionShortName' => $lesson['positionShortName'],
-                'empFullName' => $lesson['empFullName'],
-                'lastName' => $lesson['lastName'],
-                'firstName' => $lesson['firstName'],
-                'middleName' => $lesson['middleName'],
-                'subgroupName' => $lesson['subgroupName'],
-                'contentNotes' => $lesson['contentNotes'],
-                'studyTypeName' => $lesson['studyTypeName']
-            ]);
+            Schedule::firstOrCreate(
+                [
+                    'disciplineName' => $lesson['disciplineName'],
+                    'studyTimeName' => $lesson['studyTimeName'],
+                    'studyTimeBegin' => Carbon::parse($lesson['studyTimeBegin'])->format('H:i'),
+                    'studyTimeEnd' => Carbon::parse($lesson['studyTimeEnd'])->format('H:i'),
+                    'scheduleDate' => Carbon::parse($lesson['scheduleDate'])->format('Y-m-d'),
+                    'cabinetNumber' => $lesson['cabinetNumber'],
+                    'positionName' => $lesson['positionName'],
+                    'positionShortName' => $lesson['positionShortName'],
+                    'empFullName' => $lesson['empFullName'],
+                    'lastName' => $lesson['lastName'],
+                    'firstName' => $lesson['firstName'],
+                    'middleName' => $lesson['middleName'],
+                    'subgroupName' => $lesson['subgroupName'],
+                    'contentNotes' => $lesson['contentNotes'],
+                    'studyTypeName' => $lesson['studyTypeName']
+                ]
+            );
         }
     }
 }
