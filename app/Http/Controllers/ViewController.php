@@ -18,12 +18,8 @@ class ViewController extends Controller
         $data = [
             'lessons' => $lessons
         ];
-        Telegram::sendMessage(
-            text: (string)view('lessons')->with('lessons',$lessons),
-            chat_id: env('LOG_CHAT_ID'),
-            parse_mode: ParseMode::HTML
-        );
 
-        return 111;
+
+        return view('lessons')->with('lessons',$lessons);
     }
 }

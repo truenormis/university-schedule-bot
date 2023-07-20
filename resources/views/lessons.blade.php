@@ -1,5 +1,14 @@
 @php
-$num = 1;
+    function sub($text): string
+    {
+        return Str::limit($text,1,'');
+    }
+
+    $num = 1;
+
+
+
+
 @endphp
 @for($i = 0; $i < count($lessons); $i++)
 @php
@@ -22,7 +31,7 @@ $num = 1;
 @endphp
 @if($nextLesson && $nextLesson->studyTimeBegin != $lesson->studyTimeBegin)
 {{$lesson->studyTimeName}}. {{$time_start}} - {{$time_end}} ({{$breakDuration}} мин) <b>{{$lesson->studyTypeName}}:</b> {{$lesson->disciplineName}}
-Преподаватель: {{$lesson->lastName}} {{$lesson->firstName}}.{{$lesson->middleName}}.
+Преподаватель: {{$lesson->lastName}} {{sub($lesson->firstName)}}.{{sub($lesson->middleName)}}.
 
 @php
             $num++;
@@ -31,7 +40,7 @@ $num = 1;
 @if(!$nextLesson)
 {{$lesson->studyTimeName}}. {{$time_start}} - {{$time_end}}
 <b>{{$lesson->studyTypeName}}:</b> {{$lesson->disciplineName}}
-Преподаватель: {{$lesson->lastName}} {{$lesson->firstName}}.{{$lesson->middleName}}.
+Преподаватель: {{$lesson->lastName}} {{sub($lesson->firstName)}}.{{sub($lesson->middleName)}}.
 
 @php
             $num++;
@@ -39,12 +48,12 @@ $num = 1;
 @endif
 @if($nextLesson && $nextLesson->studyTimeBegin == $lesson->studyTimeBegin)
 {{$lesson->studyTimeName}}. {{$time_start}} - {{$time_end}}
-•  {{$lesson->subgroupName}} гр.: <b>{{$lesson->studyTypeName}}:</b> {{$lesson->disciplineName[0]}}
-Преподаватель: {{$lesson->lastName}} {{$lesson->firstName[0]}}.{{substr($lesson->middleName, 0, 1)}}.
+•  {{$lesson->subgroupName}} гр.: <b>{{$lesson->studyTypeName}}:</b> {{$lesson->disciplineName}}
+Преподаватель: {{$lesson->lastName}} {{sub($lesson->firstName)}}.{{sub($lesson->middleName)}}.
 
 @for($a = $i; isset($lessons[$a+1]) && $lessons[$a+1]->studyTimeBegin == $lesson->studyTimeBegin; $a++)
 •  {{$lessons[$a+1]->subgroupName}} гр.: <b>{{$lesson->studyTypeName}}:</b> {{$lesson->disciplineName}}
-Преподаватель: {{$lessons[$a+1]->lastName}} {{$lessons[$a+1]->firstName[0]}}.{{substr($lessons[$a+1]->middleName, 0, 1)}}.
+Преподаватель: {{$lessons[$a+1]->lastName}} {{sub($lessons[$a+1]->firstName)}}.{{sub($lessons[$a+1]->middleName)}}.
 
 @php
                 $num++;
