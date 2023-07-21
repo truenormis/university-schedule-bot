@@ -21,9 +21,12 @@ class GetUpdatesController extends Controller
      */
     public function __invoke(Nutgram $bot): void
     {
-
         $bot->onCommand('start', [StartCommand::class, 'handle']);
         $bot->onMessage(StateService::class);
         $bot->run();
+
+
     }
+
+
 }

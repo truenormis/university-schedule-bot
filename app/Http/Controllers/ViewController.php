@@ -18,8 +18,7 @@ class ViewController extends Controller
         $data = [
             'lessons' => $lessons
         ];
-
-
+        
         return view('lessons')->with('lessons',$lessons);
     }
 }
